@@ -19,6 +19,7 @@ namespace WinFormsApp1
             if (!Directory.Exists(pathx))//判断是否有该文件            
                 Directory.CreateDirectory(pathx);
 
+        
             string ipx = "192.168.0.1";
             string localIP = string.Empty;
             using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
@@ -44,7 +45,7 @@ namespace WinFormsApp1
         
             autosearch.IsBackground = true;
             autosearch.Start();
-            textBox1.AppendText("服务运行中");
+            textBox1.AppendText("服务运行中,双击此处查看运行目录");
             textBox1.AppendText(System.Environment.NewLine);
 
         }
@@ -56,10 +57,7 @@ namespace WinFormsApp1
             
         }
        
-        async Task Hearyouphone()
-        {
-            GetScreenCapture();
-        }
+        
         
         
 
@@ -133,8 +131,8 @@ namespace WinFormsApp1
         }
         protected override void OnHandleCreated(EventArgs e)
         {
-            
-            WindowUtils.EnableAcrylic(this, Color.FromArgb(2, Color.DarkGray));
+
+            WindowUtils.EnableAcrylic(this, Color.FromArgb(0, Color.Orange));
 
             base.OnHandleCreated(e);
         }
@@ -143,7 +141,7 @@ namespace WinFormsApp1
         {
             e.Graphics.Clear(Color.Transparent);
         }
-       
+
 
         [DllImport("user32.dll", EntryPoint = "keybd_event", SetLastError = true)]
         public static extern void keybd_event(Keys bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
@@ -158,81 +156,102 @@ namespace WinFormsApp1
             String receiveip = null;
             while (true)
             {
-                
-                client = new UdpClient(21211);
-                receiveData = client.Receive(ref remotePoint);//接收数据
-                String ip=remotePoint.Address.ToString();
-                
-                receiveString = Encoding.Default.GetString(receiveData);
-                switch (receiveString){
-                    case "shot":GetScreenCapture(); textBox1.Invoke(new EventHandler(delegate
+                try
+                {
+                    client = new UdpClient(21211);
+                    receiveData = client.Receive(ref remotePoint);//接收数据
+                    String ip = remotePoint.Address.ToString();
+
+                    receiveString = Encoding.Default.GetString(receiveData);
+                    switch (receiveString)
                     {
-                        textBox1.AppendText(DateTime.Now.ToLocalTime().ToString()+"截取全屏" + ip);
-                        textBox1.AppendText(System.Environment.NewLine);
-                    }));toastit("截取全屏");Logx("截取全屏"+ip) ; break;
-                    case "shotwindows": GetWindowCapture(); textBox1.Invoke(new EventHandler(delegate
-                    {
-                        textBox1.AppendText(DateTime.Now.ToLocalTime().ToString()+"截取局部窗口" + ip);
-                        textBox1.AppendText(System.Environment.NewLine);
-                    })); toastit("截取局部"); Logx("截取局部" + ip); break;
-                    default:
-                        if (receiveString =="volumeup"+password)
-                        {
-
-                            keybd_event(Keys.VolumeUp, 0, 0, 0);
-                        }
-                        if(receiveString == "volumedown" + password)
-                        {
-                            keybd_event(Keys.VolumeDown, 0, 0, 0);
-
-                        }
-                        if (receiveString == "mute" + password)
-                        {
-                            keybd_event(Keys.VolumeMute, 0, 0, 0);
-
-                        }
-                        if (receiveString == "premusic" + password)
-                        {
-                            keybd_event(Keys.MediaPreviousTrack, 0, 0, 0);
-
-                        }
-                        if (receiveString == "nextmusic" + password)
-                        {
-                            keybd_event(Keys.MediaNextTrack, 0, 0, 0);
-
-                        }
-                        if (receiveString == "pause" + password)
-                        {
-                            keybd_event(Keys.MediaPlayPause, 0, 0, 0);
-
-                        }
-                        if (receiveString == "taskmanager" + password)
-                        {
-                            keybd_event(Keys.LControlKey, 0, 0, 0);
-                            keybd_event(Keys.LShiftKey, 0, 0, 0);
-                            keybd_event(Keys.Escape, 0, 0, 0);
-                            keybd_event(Keys.ControlKey, 0, 2, 0);
-                            keybd_event(Keys.LShiftKey, 0, 2, 0);
-
-                        }
-                        if (receiveString.Contains("亮度设置为"))
-                        {
-                            
-                            string[] words=receiveString.Split('|');
-                            if (words[2] == password) {
-                                String bright = words[1];//亮度;
-                                textBox1.AppendText("亮度设置为"+bright);
-                                SetBrightness(Convert.ToByte(bright));
+                        case "shot":
+                            GetScreenCapture(); textBox1.Invoke(new EventHandler(delegate
+                            {
+                                textBox1.AppendText(DateTime.Now.ToLocalTime().ToString() + "截取全屏" + ip);
                                 textBox1.AppendText(System.Environment.NewLine);
-                                toastit("亮度设置为"+bright);
-                                Logx("亮度设置为" + bright+ip);
-                                
+                            })); toastit("截取全屏"); Logx("截取全屏" + ip); break;
+                        case "shotwindows":
+                            GetWindowCapture(); textBox1.Invoke(new EventHandler(delegate
+                            {
+                                textBox1.AppendText(DateTime.Now.ToLocalTime().ToString() + "截取局部窗口" + ip);
+                                textBox1.AppendText(System.Environment.NewLine);
+                            })); toastit("截取局部"); Logx("截取局部" + ip); break;
+                        default:
+                            if (receiveString == "volumeup" + password)
+                            {
+
+                                keybd_event(Keys.VolumeUp, 0, 0, 0);
                             }
-                        }
-                        break;
+                            if (receiveString == "volumedown" + password)
+                            {
+                                keybd_event(Keys.VolumeDown, 0, 0, 0);
+
+                            }
+                            if (receiveString == "mute" + password)
+                            {
+                                keybd_event(Keys.VolumeMute, 0, 0, 0);
+
+                            }
+                            if (receiveString == "premusic" + password)
+                            {
+                                keybd_event(Keys.MediaPreviousTrack, 0, 0, 0);
+
+                            }
+                            if (receiveString == "nextmusic" + password)
+                            {
+                                keybd_event(Keys.MediaNextTrack, 0, 0, 0);
+
+                            }
+                            if (receiveString == "pause" + password)
+                            {
+                                keybd_event(Keys.MediaPlayPause, 0, 0, 0);
+
+                            }
+                            if (receiveString == "taskmanager" + password)
+                            {
+                                keybd_event(Keys.LControlKey, 0, 0, 0);
+                                keybd_event(Keys.LShiftKey, 0, 0, 0);
+                                keybd_event(Keys.Escape, 0, 0, 0);
+                                keybd_event(Keys.ControlKey, 0, 2, 0);
+                                keybd_event(Keys.LShiftKey, 0, 2, 0);
+
+                            }
+                            if (receiveString.Contains("亮度设置为"))
+                            {
+
+                                string[] words = receiveString.Split('|');
+                                if (words[2] == password)
+                                {
+                                    String bright = words[1];//亮度;
+                                    textBox1.AppendText("亮度设置为" + bright);
+                                    try
+                                    {
+                                        SetBrightness(Convert.ToByte(bright));
+                                    }
+                                    catch (Exception)
+                                    {
+                                        MessageBox.Show("不支持亮度调节");
+                                    }
+
+                                    textBox1.AppendText(System.Environment.NewLine);
+                                    toastit("亮度设置为" + bright);
+                                    Logx("亮度设置为" + bright + ip);
+
+                                }
+                            }
+                            break;
+                    }
+
+                    client.Close();//关闭连接
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("启动失败，请检查21211端口是否被占用");
+                    System.Environment.Exit(0);
                 }
                 
-                client.Close();//关闭连接
+                
             }
         }
         private void Logx(String msg)
@@ -243,7 +262,7 @@ namespace WinFormsApp1
                 if (!Directory.Exists(path))//判断是否有该文件            
                     Directory.CreateDirectory(path);
                 string logFileName = path + "\\Analysis.log";//生成日志文件
-                if (!File.Exists(logFileName))//判断日志文件是否为当天
+                if (!File.Exists(logFileName))
                     File.Create(logFileName).Close();//创建文件
 
                 StreamWriter writer = File.AppendText(logFileName);//文件中添加文件流
@@ -359,27 +378,38 @@ namespace WinFormsApp1
             //实例化一个远程端点，IP和端口可以随意指定，等调用client.Receive(ref remotePoint)时会将该端点改成真正发送端端点
             IPEndPoint remotePoint = new IPEndPoint(IPAddress.Any, 0);
             String receiveip = null;
-            
-            client = new UdpClient(62231);
-            while (true)
+            Boolean canberun = true;
+            try { client = new UdpClient(62231); }
+            catch (SocketException e)
             {
+                MessageBox.Show("自动发现服务启动失败,可尝试重启电脑:62231端口占用");
+                // recover from exception
+                canberun = false;
 
-                receiveData = client.Receive(ref remotePoint);//接收数据
-                String ip = remotePoint.Address.ToString();
-                string HostName = Dns.GetHostName();
-                //把Hostname发到ip9832
-                textBox1.Invoke(new EventHandler(delegate
-                {
-                    textBox1.AppendText(DateTime.Now.ToLocalTime().ToString()+"设备尝试搜索" + ip  );
-                    textBox1.AppendText(System.Environment.NewLine);
-                }));
-                byte[] sendbytes = Encoding.Unicode.GetBytes(HostName);
-                IPEndPoint remoteIpep = new IPEndPoint(remotePoint.Address, 9832); // 发送到的IP地址和端口号
-                UdpClient udpcSend = new UdpClient();
-                Thread.Sleep(1500);
-                udpcSend.Send(sendbytes, sendbytes.Length, remoteIpep);
-                udpcSend.Close();
             }
+            
+                while (canberun)
+                {
+
+                    receiveData = client.Receive(ref remotePoint);//接收数据
+                    String ip = remotePoint.Address.ToString();
+                    string HostName = Dns.GetHostName();
+                    //把Hostname发到ip9832
+                    textBox1.Invoke(new EventHandler(delegate
+                    {
+                        textBox1.AppendText(DateTime.Now.ToLocalTime().ToString() + "设备尝试搜索" + ip);
+                        textBox1.AppendText(System.Environment.NewLine);
+                    }));
+                    byte[] sendbytes = Encoding.Unicode.GetBytes(HostName);
+                    IPEndPoint remoteIpep = new IPEndPoint(remotePoint.Address, 9832); // 发送到的IP地址和端口号
+                    UdpClient udpcSend = new UdpClient();
+                    Thread.Sleep(1500);
+                    udpcSend.Send(sendbytes, sendbytes.Length, remoteIpep);
+                    udpcSend.Close();
+                }
+            
+
+            
               
          }
 
@@ -395,8 +425,19 @@ namespace WinFormsApp1
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-          
-           
+            checkBox1.FlatStyle = FlatStyle.Popup;
+
+            if (checkBox1.Checked == false)
+            {
+                checkBox1.ForeColor = Color.White;
+               
+            }
+            else
+            {
+                checkBox1.ForeColor = Color.DarkGreen;
+                
+            }
+
         }
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -435,6 +476,18 @@ namespace WinFormsApp1
         private void pictureBox1_Click_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_DoubleClick(object sender, EventArgs e)
+        {
+            string path = System.AppDomain.CurrentDomain.BaseDirectory ;
+            string logFileName = path + "\\Analysis.log";
+            System.Diagnostics.Process.Start("explorer.exe",path);
         }
     }
 }

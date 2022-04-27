@@ -36,7 +36,7 @@ namespace WinFormsApp1
 
         private static uint ToAbgr(Color color)
         {
-            return ((uint)color.A << 24)
+            return ((uint)color.A <<24)
                 | ((uint)color.B << 16)
                 | ((uint)color.G << 8)
                 | color.R;

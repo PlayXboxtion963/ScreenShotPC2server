@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>ax1l4-5emqi-001.ico</ApplicationIcon>
+    <AssemblyName>ScreenShotRemaster</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

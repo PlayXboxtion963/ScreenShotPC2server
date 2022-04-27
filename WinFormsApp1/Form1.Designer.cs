@@ -42,6 +42,7 @@
             this.hideui = new System.Windows.Forms.ToolStripMenuItem();
             this.exit = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon2 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.label4 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,8 +50,8 @@
             // 
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Microsoft YaHei UI", 35F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.ForeColor = System.Drawing.Color.LightSeaGreen;
-            this.label2.Location = new System.Drawing.Point(12, 70);
+            this.label2.ForeColor = System.Drawing.Color.PaleTurquoise;
+            this.label2.Location = new System.Drawing.Point(7, 64);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(233, 46);
             this.label2.TabIndex = 0;
@@ -59,12 +60,12 @@
             // 
             // savepassword
             // 
-            this.savepassword.BackColor = System.Drawing.Color.Transparent;
+            this.savepassword.BackColor = System.Drawing.SystemColors.Control;
             this.savepassword.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.savepassword.ForeColor = System.Drawing.Color.MediumSpringGreen;
-            this.savepassword.Location = new System.Drawing.Point(139, 171);
+            this.savepassword.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.savepassword.Location = new System.Drawing.Point(129, 171);
             this.savepassword.Name = "savepassword";
-            this.savepassword.Size = new System.Drawing.Size(97, 37);
+            this.savepassword.Size = new System.Drawing.Size(107, 37);
             this.savepassword.TabIndex = 1;
             this.savepassword.Text = "保存";
             this.savepassword.UseVisualStyleBackColor = false;
@@ -72,12 +73,14 @@
             // 
             // textBox2
             // 
-            this.textBox2.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.textBox2.ForeColor = System.Drawing.Color.Black;
-            this.textBox2.Location = new System.Drawing.Point(12, 133);
+            this.textBox2.BackColor = System.Drawing.SystemColors.Desktop;
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Font = new System.Drawing.Font("Microsoft YaHei UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox2.ForeColor = System.Drawing.Color.PaleTurquoise;
+            this.textBox2.Location = new System.Drawing.Point(14, 125);
             this.textBox2.Name = "textBox2";
             this.textBox2.PlaceholderText = "输入想自定义的密码";
-            this.textBox2.Size = new System.Drawing.Size(236, 23);
+            this.textBox2.Size = new System.Drawing.Size(224, 26);
             this.textBox2.TabIndex = 2;
             this.textBox2.Text = "123456";
             // 
@@ -85,32 +88,36 @@
             // 
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Microsoft YaHei UI", 35F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.ForeColor = System.Drawing.Color.DarkOrange;
-            this.label3.Location = new System.Drawing.Point(12, 9);
+            this.label3.ForeColor = System.Drawing.Color.PaleTurquoise;
+            this.label3.Location = new System.Drawing.Point(8, 18);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(233, 49);
             this.label3.TabIndex = 4;
             this.label3.Text = "label3";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // textBox1
             // 
-            this.textBox1.BackColor = System.Drawing.Color.LightYellow;
-            this.textBox1.Font = new System.Drawing.Font("Microsoft YaHei UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox1.Location = new System.Drawing.Point(12, 228);
+            this.textBox1.BackColor = System.Drawing.SystemColors.Desktop;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Font = new System.Drawing.Font("等线", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox1.ForeColor = System.Drawing.Color.PaleTurquoise;
+            this.textBox1.Location = new System.Drawing.Point(251, 12);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(236, 333);
+            this.textBox1.Size = new System.Drawing.Size(184, 196);
             this.textBox1.TabIndex = 6;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.DoubleClick += new System.EventHandler(this.textBox1_DoubleClick);
             // 
             // checkBox1
             // 
             this.checkBox1.BackColor = System.Drawing.Color.Transparent;
             this.checkBox1.Font = new System.Drawing.Font("Microsoft YaHei UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.checkBox1.ForeColor = System.Drawing.Color.DarkOrange;
-            this.checkBox1.Location = new System.Drawing.Point(12, 171);
+            this.checkBox1.ForeColor = System.Drawing.Color.PaleTurquoise;
+            this.checkBox1.Location = new System.Drawing.Point(12, 170);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(111, 37);
             this.checkBox1.TabIndex = 7;
@@ -162,18 +169,27 @@
             this.notifyIcon2.Text = "notifyIcon2";
             this.notifyIcon2.Visible = true;
             // 
+            // label4
+            // 
+            this.label4.ForeColor = System.Drawing.Color.Cornsilk;
+            this.label4.Location = new System.Drawing.Point(12, 143);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(233, 23);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "——————————————————————";
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(257, 573);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackColor = System.Drawing.SystemColors.Desktop;
+            this.ClientSize = new System.Drawing.Size(444, 221);
             this.Controls.Add(this.savepassword);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.label4);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -201,5 +217,6 @@
         private ToolStripMenuItem exit;
         private NotifyIcon notifyIcon2;
         private PictureBox pictureBox1;
+        private Label label4;
     }
 }

@@ -53,7 +53,14 @@ namespace WinFormsApp1
             var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
 
             // Start the FTP server
-            ftpServerHost.StartAsync().Wait();
+            try
+            {
+                ftpServerHost.StartAsync().Wait();
+            }catch (Exception)
+            {
+                MessageBox.Show("文件系统启动失败，请检查23235端口是否被占用");
+            }
+            
         }
  
     }
