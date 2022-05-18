@@ -166,13 +166,18 @@ namespace WinFormsApp1
                     switch (receiveString)
                     {
                         case "shot":
-                            GetScreenCapture(); textBox1.Invoke(new EventHandler(delegate
+                            try
+
+                            { GetScreenCapture(); }
+                            catch (Exception) { }; 
+                            textBox1.Invoke(new EventHandler(delegate
                             {
                                 textBox1.AppendText(DateTime.Now.ToLocalTime().ToString() + "截取全屏" + ip);
                                 textBox1.AppendText(System.Environment.NewLine);
                             })); toastit("截取全屏"); Logx("截取全屏" + ip); break;
                         case "shotwindows":
-                            GetWindowCapture(); textBox1.Invoke(new EventHandler(delegate
+                            try { GetWindowCapture(); }catch(Exception) {  };
+                             textBox1.Invoke(new EventHandler(delegate
                             {
                                 textBox1.AppendText(DateTime.Now.ToLocalTime().ToString() + "截取局部窗口" + ip);
                                 textBox1.AppendText(System.Environment.NewLine);
