@@ -19,9 +19,10 @@ namespace WinFormsApp1
     {
         public string setpassword { get; set; } = "100";
         public string ippub { get; set; } = "100";
+        
         public void Startftp()
         {
-            string ipx="192.168.0.1";
+            /*string ipx="192.168.0.1";
             string localIP = string.Empty;
             using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
             {
@@ -30,8 +31,8 @@ namespace WinFormsApp1
                 localIP = endPoint.Address.ToString();
                 ipx = localIP;
             }
-            ippub= ipx;
-            System.Diagnostics.Debug.WriteLine(ipx);
+            ippub= ipx;*/
+            System.Diagnostics.Debug.WriteLine(ippub);
             // Setup dependency injection
             var services = new ServiceCollection();
             // use %TEMP%/TestFtpServer as root folder
@@ -41,7 +42,7 @@ namespace WinFormsApp1
                 .UseDotNetFileSystem() 
                 );
             services.Configure<FtpServerOptions>(opt => opt
-            .ServerAddress = ipx);
+            .ServerAddress = ippub);
             services.Configure<FtpServerOptions>(opt => opt
               .Port = 23235);
             CustomMembershipProvider mCustomMembershipProvider = new CustomMembershipProvider();
@@ -62,7 +63,7 @@ namespace WinFormsApp1
             }
             
         }
- 
+       
     }
     public class CustomMembershipProvider : IMembershipProvider
     {

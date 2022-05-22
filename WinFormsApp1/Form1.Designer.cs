@@ -43,6 +43,9 @@
             this.exit = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon2 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label4 = new System.Windows.Forms.Label();
+            this.Ipbox = new System.Windows.Forms.ComboBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,7 +66,7 @@
             this.savepassword.BackColor = System.Drawing.SystemColors.Control;
             this.savepassword.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.savepassword.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.savepassword.Location = new System.Drawing.Point(129, 171);
+            this.savepassword.Location = new System.Drawing.Point(125, 201);
             this.savepassword.Name = "savepassword";
             this.savepassword.Size = new System.Drawing.Size(107, 37);
             this.savepassword.TabIndex = 1;
@@ -77,7 +80,7 @@
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox2.Font = new System.Drawing.Font("Microsoft YaHei UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.textBox2.ForeColor = System.Drawing.Color.PaleTurquoise;
-            this.textBox2.Location = new System.Drawing.Point(14, 125);
+            this.textBox2.Location = new System.Drawing.Point(7, 160);
             this.textBox2.Name = "textBox2";
             this.textBox2.PlaceholderText = "输入想自定义的密码";
             this.textBox2.Size = new System.Drawing.Size(224, 26);
@@ -107,7 +110,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(184, 196);
+            this.textBox1.Size = new System.Drawing.Size(184, 174);
             this.textBox1.TabIndex = 6;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.DoubleClick += new System.EventHandler(this.textBox1_DoubleClick);
@@ -117,7 +120,7 @@
             this.checkBox1.BackColor = System.Drawing.Color.Transparent;
             this.checkBox1.Font = new System.Drawing.Font("Microsoft YaHei UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.checkBox1.ForeColor = System.Drawing.Color.PaleTurquoise;
-            this.checkBox1.Location = new System.Drawing.Point(12, 170);
+            this.checkBox1.Location = new System.Drawing.Point(8, 201);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(111, 37);
             this.checkBox1.TabIndex = 7;
@@ -172,17 +175,55 @@
             // label4
             // 
             this.label4.ForeColor = System.Drawing.Color.Cornsilk;
-            this.label4.Location = new System.Drawing.Point(12, 143);
+            this.label4.Location = new System.Drawing.Point(5, 178);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(233, 23);
             this.label4.TabIndex = 8;
             this.label4.Text = "——————————————————————";
             // 
+            // Ipbox
+            // 
+            this.Ipbox.BackColor = System.Drawing.SystemColors.Window;
+            this.Ipbox.FormattingEnabled = true;
+            this.Ipbox.Location = new System.Drawing.Point(7, 129);
+            this.Ipbox.Name = "Ipbox";
+            this.Ipbox.Size = new System.Drawing.Size(112, 25);
+            this.Ipbox.TabIndex = 9;
+            this.Ipbox.SelectedIndexChanged += new System.EventHandler(this.Ipbox_SelectedIndexChanged);
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.checkBox2.ForeColor = System.Drawing.Color.PaleTurquoise;
+            this.checkBox2.Location = new System.Drawing.Point(125, 118);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(112, 44);
+            this.checkBox2.TabIndex = 10;
+            this.checkBox2.Text = "使用自选网卡\r\n而非自动获取";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button1.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.button1.Location = new System.Drawing.Point(259, 201);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(172, 37);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "防火墙规则设置\r\n";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_3);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
-            this.ClientSize = new System.Drawing.Size(444, 221);
+            this.ClientSize = new System.Drawing.Size(443, 264);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.Ipbox);
             this.Controls.Add(this.savepassword);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.textBox1);
@@ -218,5 +259,8 @@
         private NotifyIcon notifyIcon2;
         private PictureBox pictureBox1;
         private Label label4;
+        private ComboBox Ipbox;
+        private CheckBox checkBox2;
+        private Button button1;
     }
 }

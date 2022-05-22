@@ -4,12 +4,17 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Management;
+using System.Net.NetworkInformation;
+using NetFwTypeLib;
+using System.Security.Principal;
+
 namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
         public string password { get; set; } = "123456";
         Thread ftpthread;
+        string ipx = "192.168.0.1";
         public Form1()
         {
             //Thread thread = new Thread(new ThreadStart(startftp));
@@ -19,8 +24,6 @@ namespace WinFormsApp1
             if (!Directory.Exists(pathx))//判断是否有该文件            
                 Directory.CreateDirectory(pathx);
 
-        
-            string ipx = "192.168.0.1";
             string localIP = string.Empty;
             using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
             {
@@ -29,6 +32,18 @@ namespace WinFormsApp1
                 localIP = endPoint.Address.ToString();
                 ipx = localIP;
             }
+
+            if (Settings1.Default.Isusingselfselect == true)
+            {
+                ipx = Settings1.Default.ip;
+                checkBox2.Checked = true;
+               
+            }
+            else
+            {
+                checkBox2.Checked = false;
+            }
+
             password = Settings1.Default.Password;
             textBox2.Text = password;
             checkBox1.Checked = Settings1.Default.Ishiding;
@@ -47,12 +62,13 @@ namespace WinFormsApp1
             autosearch.Start();
             textBox1.AppendText("服务运行中,双击此处查看运行目录");
             textBox1.AppendText(System.Environment.NewLine);
-
+            getnetip();
         }
         public void startftp()
         {
             FTP mftp = new FTP();
             mftp.setpassword =password;
+            mftp.ippub = ipx;
             mftp.Startftp();
             
         }
@@ -60,7 +76,34 @@ namespace WinFormsApp1
         
         
         
+        private  void getnetip()
+        {
+            //获取说有网卡信息
+            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+            IList<string> list = new List<string>();
+            foreach (NetworkInterface adapter in nics)
+            {
+                
+                    IPInterfaceProperties ip = adapter.GetIPProperties();
+                    //获取单播地址集
+                    UnicastIPAddressInformationCollection ipCollection = ip.UnicastAddresses;
+                    foreach (UnicastIPAddressInformation ipadd in ipCollection)
+                    {
+                    //InterNetwork    IPV4地址      InterNetworkV6        IPV6地址
+                    //Max            MAX 位址
+                    if (ipadd.Address.AddressFamily == AddressFamily.InterNetwork)
+                    //判断是否为ipv4
+                    {
+                        System.Diagnostics.Debug.WriteLine(ipadd.Address.ToString());
+                        list.Add(ipadd.Address.ToString());
+                    }      
+                    
 
+                    }
+                  
+            }
+            Ipbox.DataSource = list;
+        }
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -111,10 +154,11 @@ namespace WinFormsApp1
             Settings1.Default.Save();
             textBox1.AppendText("已保存隐藏信息");
             textBox1.AppendText(System.Environment.NewLine);
-            
+            Settings1.Default.Isusingselfselect = checkBox2.Checked;
+            Settings1.Default.Save();
+            Settings1.Default.ip = Ipbox.Text;
+            Settings1.Default.Save();
             Application.Restart();
-
-
 
         }
 
@@ -167,8 +211,10 @@ namespace WinFormsApp1
                     {
                         case "shot":
                             try
-
-                            { GetScreenCapture(); }
+                            {  
+                                GetScreenCapture(ip);
+                                
+                            }
                             catch (Exception) { }; 
                             textBox1.Invoke(new EventHandler(delegate
                             {
@@ -176,7 +222,7 @@ namespace WinFormsApp1
                                 textBox1.AppendText(System.Environment.NewLine);
                             })); toastit("截取全屏"); Logx("截取全屏" + ip); break;
                         case "shotwindows":
-                            try { GetWindowCapture(); }catch(Exception) {  };
+                            try { GetWindowCapture(ip); }catch(Exception) {  };
                              textBox1.Invoke(new EventHandler(delegate
                             {
                                 textBox1.AppendText(DateTime.Now.ToLocalTime().ToString() + "截取局部窗口" + ip);
@@ -308,22 +354,40 @@ namespace WinFormsApp1
                 }
             }
         }
-        private void GetScreenCapture()
+        private void GetScreenCapture(String ip)
         {
             Rectangle tScreenRect = new Rectangle(0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             Bitmap tSrcBmp = new Bitmap(tScreenRect.Width, tScreenRect.Height); // 用于屏幕原始图片保存
             Graphics gp = Graphics.FromImage(tSrcBmp);
             gp.CopyFromScreen(0, 0, 0, 0, tScreenRect.Size);
             gp.DrawImage(tSrcBmp, 0, 0, tScreenRect, GraphicsUnit.Pixel);
-            String path = System.AppDomain.CurrentDomain.BaseDirectory +@"\workfloader\tempcap.bmp";
+            String path = System.AppDomain.CurrentDomain.BaseDirectory + @"\workfloader\tempcap.bmp";
             tSrcBmp.Save(@path, System.Drawing.Imaging.ImageFormat.Bmp);
             gp = null;
             tSrcBmp = null;
             GC.Collect();
+            Thread.Sleep(50);
+            /*byte[] sendbytes = Encoding.Unicode.GetBytes("fin");
+            IPEndPoint remoteIpep = new IPEndPoint(IPAddress.Parse(ip), 61111); // 发送到的IP地址和端口号
+            UdpClient udpcSend = new UdpClient();
+            udpcSend.Send(sendbytes, sendbytes.Length, remoteIpep);
+            udpcSend.Close();*/
+            try {
+                Socket tcpClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                EndPoint point = new IPEndPoint(IPAddress.Parse(ip), 61123);
+                tcpClient.Connect(point);//通过IP和端口号来定位一个所要连接的服务器端
+                tcpClient.Send(Encoding.UTF8.GetBytes("1"));
+                tcpClient.Close();
+            }
+            catch (Exception)
+            {
+                
+            }            
+
 
         }
 
-        private void GetWindowCapture()
+        private void GetWindowCapture(String ip)
         {
             //获取当前窗口句柄
             RECT rc = new RECT();
@@ -353,6 +417,12 @@ namespace WinFormsApp1
             result = null;
             graphics = null;
             GC.Collect();
+            Thread.Sleep(50);
+            Socket tcpClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            EndPoint point = new IPEndPoint(IPAddress.Parse(ip), 61123);
+            tcpClient.Connect(point);//通过IP和端口号来定位一个所要连接的服务器端
+            tcpClient.Send(Encoding.UTF8.GetBytes("1"));
+            tcpClient.Close();
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
@@ -384,10 +454,10 @@ namespace WinFormsApp1
             IPEndPoint remotePoint = new IPEndPoint(IPAddress.Any, 0);
             String receiveip = null;
             Boolean canberun = true;
-            try { client = new UdpClient(62231); }
+            try { client = new UdpClient(58974); }
             catch (SocketException e)
             {
-                MessageBox.Show("自动发现服务启动失败,可尝试重启电脑:62231端口占用");
+                MessageBox.Show("自动发现服务启动失败,可尝试重启电脑:58974端口占用");
                 // recover from exception
                 canberun = false;
 
@@ -408,7 +478,7 @@ namespace WinFormsApp1
                     byte[] sendbytes = Encoding.Unicode.GetBytes(HostName);
                     IPEndPoint remoteIpep = new IPEndPoint(remotePoint.Address, 9832); // 发送到的IP地址和端口号
                     UdpClient udpcSend = new UdpClient();
-                    Thread.Sleep(1500);
+                    Thread.Sleep(50);
                     udpcSend.Send(sendbytes, sendbytes.Length, remoteIpep);
                     udpcSend.Close();
                 }
@@ -493,6 +563,92 @@ namespace WinFormsApp1
             string path = System.AppDomain.CurrentDomain.BaseDirectory ;
             string logFileName = path + "\\Analysis.log";
             System.Diagnostics.Process.Start("explorer.exe",path);
+        }
+
+        private void Ipbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        /// <summary>
+        /// 将应用程序添加到防火墙例外
+        /// </summary>
+        /// <param name="name">应用程序名称</param>
+        /// <param name="executablePath">应用程序可执行文件全路径</param>
+        public static void NetFwAddApps(string ruleName, string appName)
+        {
+           string FwMgr = "HNetCfg.FwMgr";
+         string FwApp = "HNetCfg.FwAuthorizedApplication";
+         string FwPolicy = "HNetCfg.FwPolicy2";
+        string FwRule = "HNetCfg.FWRule";
+
+
+            //创建firewall管理类的实例
+            var policy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID(FwPolicy));
+
+            // Inbound Rule
+            var ruleIn = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID(FwRule));
+
+            ruleIn.Name = ruleName;
+            ruleIn.ApplicationName = appName;
+            ruleIn.Enabled = true;
+
+            policy.Rules.Add(ruleIn);
+
+            // Outbound Rule
+            var ruleOut = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID(FwRule));
+
+            ruleOut.Name = ruleName;
+            ruleOut.ApplicationName = appName;
+            ruleOut.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
+           
+            ruleOut.Enabled = true;
+
+           
+            policy.Rules.Add(ruleOut);
+            MessageBox.Show("设置成功");
+
+
+        }
+      
+
+        private void button1_Click_3(object sender, EventArgs e)
+        {
+
+            if (IsAdministrator()) {
+                try
+                {
+                    NetFwAddApps("ScreenShotPc", System.Windows.Forms.Application.ExecutablePath);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("设置失败");
+                }
+               
+            }
+            else
+            {
+                MessageBox.Show("请以管理员权限运行后才能自动配置防火墙");
+            }
+           
+        }
+
+        public static bool IsAdministrator()
+        {
+            WindowsIdentity current = WindowsIdentity.GetCurrent();
+            WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
+            //WindowsBuiltInRole可以枚举出很多权限，例如系统用户、User、Guest等等
+            return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
